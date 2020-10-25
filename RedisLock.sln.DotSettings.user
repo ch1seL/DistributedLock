@@ -1,0 +1,16 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
+  &lt;Assembly Path="C:\Users\ch1seL\.nuget\packages\microsoft.extensions.caching.abstractions\3.1.9\lib\netcoreapp3.1\Microsoft.Extensions.Caching.Abstractions.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Users\ch1seL\.nuget\packages\microsoft.extensions.caching.stackexchangeredis\3.1.9\lib\netstandard2.0\Microsoft.Extensions.Caching.StackExchangeRedis.dll" /&gt;&#xD;
+&lt;/AssemblyExplorer&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=1048f807_002D5042_002D49b7_002Daa41_002D891be120cbd5/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Test1" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::8963B917-20D6-412D-9B15-B06CA99AFEAA::.NETCoreApp,Version=v3.1::TestProject1.UnitTest1&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	
+	
+	
+	
+	
+	</wpf:ResourceDictionary>
