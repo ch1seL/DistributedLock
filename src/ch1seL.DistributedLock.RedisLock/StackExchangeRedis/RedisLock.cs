@@ -3,27 +3,30 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Caching.StackExchangeRedis;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RedLockNet;
 using RedLockNet.SERedis;
 using RedLockNet.SERedis.Configuration;
 using StackExchange.Redis;
 
-namespace Microsoft.Extensions.Caching
+namespace Microsoft.Extensions.Caching.StackExchangeRedis
 {
     public class RedisLock : IDistributedLock, IDisposable
     {
+        private readonly ILoggerFactory _loggerFactory;
         private readonly SemaphoreSlim _connectionLock = new SemaphoreSlim(1, 1);
         private readonly TimeSpan _defaultExpiryTime = TimeSpan.FromSeconds(60);
         private readonly TimeSpan _defaultRetryTime = TimeSpan.FromMilliseconds(500);
         private readonly TimeSpan _defaultWaitTime = TimeSpan.FromSeconds(30);
-        private readonly RedisCacheOptions _options;
+        private readonly RedisLockOptions _options;
         private IDistributedLockFactory _distributedLockFactory;
 
-        public RedisLock(IOptions<RedisCacheOptions> redisCacheOptionsAccessor)
+        public RedisLock(IServiceProvider serviceProvider)
         {
-            _options = redisCacheOptionsAccessor.Value;
+            _options = serviceProvider.GetService<IOptions<RedisLockOptions>>().Value;
+            _loggerFactory = serviceProvider.GetService<ILoggerFactory>();
         }
 
         public void Dispose()
@@ -75,7 +78,7 @@ namespace Microsoft.Extensions.Caching
                 ConnectionMultiplexer connection = _options.ConfigurationOptions != null
                     ? await ConnectionMultiplexer.ConnectAsync(_options.ConfigurationOptions)
                     : await ConnectionMultiplexer.ConnectAsync(_options.Configuration);
-                _distributedLockFactory = RedLockFactory.Create(new List<RedLockMultiplexer> {connection});
+                _distributedLockFactory = RedLockFactory.Create(new List<RedLockMultiplexer> {connection}, _loggerFactory);
             }
             finally
             {

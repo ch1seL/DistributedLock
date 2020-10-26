@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.Extensions.Caching;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 
@@ -16,12 +15,12 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection" /> to add services to.</param>
         /// <param name="setupAction">
-        ///     An <see cref="Action{RedisCacheOptions}" /> to configure the provided
-        ///     <see cref="RedisCacheOptions" />.
+        ///     An <see cref="Action{RedisLockOptions}" /> to configure the provided
+        ///     <see cref="RedisLockOptions" />.
         /// </param>
         /// <returns>The <see cref="IServiceCollection" /> so that additional calls can be chained.</returns>
         public static IServiceCollection AddStackExchangeRedisLock(this IServiceCollection services,
-            Action<RedisCacheOptions> setupAction)
+            Action<RedisLockOptions> setupAction)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
