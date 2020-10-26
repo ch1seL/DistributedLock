@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
-        <PackageVersion>0.0.2</PackageVersion>
+        <PackageVersion>0.0.3</PackageVersion>
         <Authors>ch1seL</Authors>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageId>ch1seL.DistributedLock.Abstraction</PackageId>
