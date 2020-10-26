@@ -1,4 +1,4 @@
-![Build and Test](https://github.com/ch1seL/RedisLock/workflows/.NET%20Core/badge.svg)
+![Build and Test](https://github.com/ch1seL/RedisLock/workflows/Build%20and%20Test/badge.svg)
 
 This package is just [RedLock.net](https://github.com/samcook/RedLock.net) wrapper and simplifies its use within NetCore
 
