@@ -27,9 +27,10 @@ namespace ch1seL.DistributedLock.RedisLock.IntegrationTests
 
         protected async Task RunTaskWithLock(Func<Task> taskFactory)
         {
-            using (await _distributedLock.CreateLockAsync(_key, TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5), TimeSpan.FromMilliseconds(10)))
+            using (await _distributedLock.CreateLockAsync(_key, TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5),
+                TimeSpan.FromMilliseconds(10)))
             {
-                await taskFactory();    
+                await taskFactory();
             }
         }
     }

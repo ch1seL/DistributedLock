@@ -10,8 +10,8 @@ namespace ch1seL.DistributedLock.RedisLock.IntegrationTests
 {
     public class RedisLockTests : RedisLockTestsBase
     {
-        private readonly Random _random = new Random();
         private readonly object _intervalsLock = new object();
+        private readonly Random _random = new Random();
 
         [Fact]
         public async Task ParallelsTaskWithLockDontOverlapEachOther()
@@ -21,7 +21,7 @@ namespace ch1seL.DistributedLock.RedisLock.IntegrationTests
             var stopwatch = Stopwatch.StartNew();
 
             await Task
-                .WhenAll(Enumerable.Repeat((object)null, repeat)
+                .WhenAll(Enumerable.Repeat((object) null, repeat)
                     .Select(_ => RunTaskWithLock(() => AddIntervalTask(intervals, stopwatch))));
 
             var intersections = intervals
@@ -32,7 +32,7 @@ namespace ch1seL.DistributedLock.RedisLock.IntegrationTests
             intersections.Should().BeEmpty();
         }
 
-        private async Task AddIntervalTask(ICollection<Interval> intervals,Stopwatch stopwatch)
+        private async Task AddIntervalTask(ICollection<Interval> intervals, Stopwatch stopwatch)
         {
             var start = stopwatch.ElapsedTicks;
             await Task.Delay(TimeSpan.FromMilliseconds(_random.Next(100)));

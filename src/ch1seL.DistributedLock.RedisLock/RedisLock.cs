@@ -41,16 +41,28 @@ namespace Microsoft.Extensions.Caching
             if (_options.InstanceName != null)
                 resource = string.Join('-', _options.InstanceName, resource);
 
-            return await _distributedLockFactory.CreateLockAsync(resource,
+            IRedLock @lock = await _distributedLockFactory.CreateLockAsync(resource,
                 expiryTime ?? _defaultExpiryTime, waitTime ?? _defaultWaitTime, retryTime ?? _defaultRetryTime,
                 cancellationToken);
-            //
-            // if (@lock.IsAcquired) return @lock;
-            //
-            // var lockId = @lock.LockId;
-            // RedLockStatus status = @lock.Status;
-            // @lock.Dispose();
-            // throw new DistributedLockException(resource, lockId, status.ToString());
+
+            if (@lock.IsAcquired) return @lock;
+
+            var lockId = @lock.LockId;
+            DistributedLockBadStatus status = RedLockStatusToDistributedLockBadStatus(@lock.Status);
+            @lock.Dispose();
+            throw new DistributedLockException(resource, lockId, status);
+        }
+
+        private static DistributedLockBadStatus RedLockStatusToDistributedLockBadStatus(RedLockStatus redLockStatus)
+        {
+            return redLockStatus switch
+            {
+                RedLockStatus.Unlocked => DistributedLockBadStatus.Unlocked,
+                RedLockStatus.Conflicted => DistributedLockBadStatus.Conflicted,
+                RedLockStatus.Expired => DistributedLockBadStatus.Expired,
+                RedLockStatus.NoQuorum => DistributedLockBadStatus.NoQuorum,
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
 
         private async Task Connect()
