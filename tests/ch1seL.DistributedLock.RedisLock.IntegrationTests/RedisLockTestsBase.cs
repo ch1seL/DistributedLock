@@ -8,7 +8,6 @@ namespace ch1seL.DistributedLock.RedisLock.IntegrationTests
     public class RedisLockTestsBase : IDisposable
     {
         private readonly IDistributedLock _distributedLock;
-        private readonly string _key = Guid.NewGuid().ToString("N");
         private readonly ServiceProvider _serviceProvider;
 
         protected RedisLockTestsBase()
@@ -25,10 +24,9 @@ namespace ch1seL.DistributedLock.RedisLock.IntegrationTests
             _serviceProvider?.Dispose();
         }
 
-        protected async Task RunTaskWithLock(Func<Task> taskFactory)
+        protected async Task RunTaskWithLock(string key, Func<Task> taskFactory, TimeSpan? waitTime = null)
         {
-            using (await _distributedLock.CreateLockAsync(_key, TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5),
-                TimeSpan.FromMilliseconds(10)))
+            using (await _distributedLock.CreateLockAsync(key, TimeSpan.FromMinutes(5), waitTime ?? TimeSpan.FromMinutes(5), TimeSpan.FromMilliseconds(10)))
             {
                 await taskFactory();
             }
