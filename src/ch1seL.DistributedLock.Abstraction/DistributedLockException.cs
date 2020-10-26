@@ -16,8 +16,8 @@ namespace Microsoft.Extensions.Caching.Distributed
             base.Data.Add("Status", status);
         }
 
-        private string Resource { get; }
-        private string LockId { get; }
-        private DistributedLockBadStatus Status { get; }
+        public string Resource { get; }
+        public string LockId { get; }
+        public DistributedLockBadStatus Status { get; }
     }
 }
