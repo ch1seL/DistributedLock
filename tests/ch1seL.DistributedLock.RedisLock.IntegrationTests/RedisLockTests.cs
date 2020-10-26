@@ -10,7 +10,6 @@ namespace ch1seL.DistributedLock.RedisLock.IntegrationTests
 {
     public class RedisLockTests : RedisLockTestsBase
     {
-        private readonly object _intervalsLock = new object();
         private readonly Random _random = new Random();
 
         [Fact]
@@ -37,10 +36,7 @@ namespace ch1seL.DistributedLock.RedisLock.IntegrationTests
             var start = stopwatch.ElapsedTicks;
             await Task.Delay(TimeSpan.FromMilliseconds(_random.Next(100)));
             var end = stopwatch.ElapsedTicks;
-            lock (_intervalsLock) // avoid parallel access to the interval list
-            {
-                intervals.Add(new Interval(start, end));
-            }
+            intervals.Add(new Interval(start, end));
         }
     }
 }
