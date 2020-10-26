@@ -24,16 +24,19 @@ namespace WorkerService
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                using (await _distributedLock.CreateLockAsync("test-lock", waitTime: TimeSpan.FromMinutes(5), retryTime: TimeSpan.FromMilliseconds(10), cancellationToken: stoppingToken))
+                using (await _distributedLock.CreateLockAsync("test-lock", waitTime: TimeSpan.FromMinutes(5),
+                    retryTime: TimeSpan.FromMilliseconds(10), cancellationToken: stoppingToken))
                 {
-                    _logger.LogInformation("App:{appId} | Instance: {instanceId} | Worker running at: {time}", Program.AppId, _instanceId,
+                    _logger.LogInformation("App:{appId} | Instance: {instanceId} | Worker running at: {time}",
+                        Program.AppId, _instanceId,
                         DateTimeOffset.Now);
                     await Task.Delay(TimeSpan.FromSeconds(3), stoppingToken);
-                    _logger.LogInformation("App:{appId} | Instance: {instanceId} | Worker finished at: {time}", Program.AppId, _instanceId,
+                    _logger.LogInformation("App:{appId} | Instance: {instanceId} | Worker finished at: {time}",
+                        Program.AppId, _instanceId,
                         DateTimeOffset.Now);
                 }
 
-                // lock use retries and will use only one instance of worker without a random delay out of lock
+                // RedLock uses retries and will use mostly only one instance of the worker
                 await Task.Delay(_random.Next(100, 200), stoppingToken);
             }
         }
