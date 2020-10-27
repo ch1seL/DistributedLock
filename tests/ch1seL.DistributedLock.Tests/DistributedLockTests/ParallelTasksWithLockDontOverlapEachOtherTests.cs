@@ -8,7 +8,7 @@ using Xunit;
 
 namespace ch1seL.DistributedLock.Tests.DistributedLockTests
 {
-    public class ParallelsTaskWithLockDontOverlapEachOtherTests : LockTestsBase
+    public class ParallelTasksWithLockDontOverlapEachOtherTests : LockTestsBase
     {
         private readonly Random _random = new Random();
 
