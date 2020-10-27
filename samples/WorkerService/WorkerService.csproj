@@ -10,6 +10,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\src\ch1seL.DistributedLock.MemoryLock\ch1seL.DistributedLock.MemoryLock.csproj" />
       <ProjectReference Include="..\..\src\ch1seL.DistributedLock.RedisLock\ch1seL.DistributedLock.RedisLock.csproj" />
     </ItemGroup>
 </Project>

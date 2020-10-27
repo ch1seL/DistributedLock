@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.Eventing.Reader;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -18,7 +19,14 @@ namespace WorkerService
             return Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddStackExchangeRedisLock(options => options.Configuration = "localhost");
+                    if (hostContext.HostingEnvironment.IsDevelopment())
+                    {
+                        services.AddMemoryLock();
+                    }
+                    else
+                    {
+                        services.AddStackExchangeRedisLock(options => options.Configuration = "localhost");    
+                    }
 
                     for (var i = 0; i < 5; i++) services.AddSingleton<IHostedService, Worker>();
                 });
