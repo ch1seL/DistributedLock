@@ -19,7 +19,7 @@ namespace ch1seL.DistributedLock.Tests.DistributedLockTests
 
             Func<Task> act = () => Task.WhenAll(
                 Enumerable.Repeat((object) null, 10)
-                    .Select(_ => AddIntervalTaskWithLock(TimeSpan.FromMilliseconds(10), TimeSpan.FromSeconds(1))));
+                    .Select(_ => AddIntervalTaskWithLock(TimeSpan.FromMilliseconds(10), TimeSpan.FromSeconds(10))));
 
             var exception = await act.Should().ThrowExactlyAsync<DistributedLockException>();
             exception.Which.Status.Should().Be(DistributedLockBadStatus.Conflicted);

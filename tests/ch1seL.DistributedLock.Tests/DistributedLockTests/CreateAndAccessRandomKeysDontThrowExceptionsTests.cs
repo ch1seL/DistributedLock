@@ -20,7 +20,7 @@ namespace ch1seL.DistributedLock.Tests.DistributedLockTests
             Func<Task> act = async () => await Task
                 .WhenAll(Enumerable.Repeat((object) null, repeat)
                     .SelectMany(_ => Enumerable.Repeat(Guid.NewGuid().ToString("N"), repeat)
-                        .Select(guid => AddIntervalTaskWithLock(key: guid, workTime: TimeSpan.FromSeconds(1)))));
+                        .Select(guid => AddIntervalTaskWithLock(key: guid))));
 
             await act.Should().NotThrowAsync();
         }

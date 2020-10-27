@@ -32,7 +32,7 @@ namespace ch1seL.DistributedLock.Tests.Base
             string key = null)
         {
             using (await _distributedLock.CreateLockAsync(key ?? _key, TimeSpan.FromMinutes(5),
-                waitTime ?? TimeSpan.FromMinutes(5), TimeSpan.FromMilliseconds(10)))
+                waitTime ?? TimeSpan.FromMinutes(5), TimeSpan.FromMilliseconds(100)))
             {
                 var start = _stopwatch.ElapsedTicks;
                 await Task.Delay(workTime ?? TimeSpan.Zero);
