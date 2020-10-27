@@ -17,18 +17,18 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.x
-        
-    - name: Setup Redis Server
-      uses: supercharge/redis-github-action@1.1.0
       
     - name: Restore
       run: dotnet restore
 
     - name: Build
-      run: dotnet build --configuration Release --no-restore --verbosity normal
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Setup Redis Server
+      uses: supercharge/redis-github-action@1.1.0
 
     - name: Test
-      run: dotnet test --configuration Release --no-restore --no-build --verbosity normal
+      run: dotnet test --no-restore --verbosity normal
 
     - name: Publish NuGet ch1seL.DistributedLock.Abstraction
       uses: brandedoutcast/publish-nuget@v2.5.5

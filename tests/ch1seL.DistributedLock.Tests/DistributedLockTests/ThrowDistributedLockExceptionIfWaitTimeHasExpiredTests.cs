@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using ch1seL.DistributedLock.Tests.Base;
 using FluentAssertions;
@@ -17,9 +18,8 @@ namespace ch1seL.DistributedLock.Tests.DistributedLockTests
             Init(LockServiceImplementationsTestsData.RegistrationByServiceType[lockServiceType]);
 
             Func<Task> act = () => Task.WhenAll(
-                AddIntervalTaskWithLock(TimeSpan.FromMilliseconds(1), TimeSpan.FromSeconds(1)),
-                AddIntervalTaskWithLock(TimeSpan.FromMilliseconds(1), TimeSpan.FromSeconds(1))
-            );
+                Enumerable.Repeat((object) null, 10)
+                    .Select(_ => AddIntervalTaskWithLock(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(5))));
 
             var exception = await act.Should().ThrowExactlyAsync<DistributedLockException>();
             exception.Which.Status.Should().Be(DistributedLockBadStatus.Conflicted);

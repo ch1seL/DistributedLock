@@ -9,8 +9,6 @@ namespace ch1seL.DistributedLock.Tests.DistributedLockTests
 {
     public class CreateAndAccessRandomKeysDontThrowExceptionsTests : LockTestsBase
     {
-        private readonly Random _random = new Random();
-
         [Theory]
         [MemberData(nameof(LockServiceImplementationsTestsData.LockServiceTypes),
             MemberType = typeof(LockServiceImplementationsTestsData))]
@@ -20,10 +18,9 @@ namespace ch1seL.DistributedLock.Tests.DistributedLockTests
             const int repeat = 100;
 
             Func<Task> act = async () => await Task
-                .WhenAll(Enumerable.Repeat<Func<string>>(()=>Guid.NewGuid().ToString("N"), repeat)
-                    .SelectMany(getKeyFunc => Enumerable.Repeat((object) null, repeat).Select(___ =>
-                        AddIntervalTaskWithLock(workTime: TimeSpan.FromMilliseconds(_random.Next(10)),
-                            key: getKeyFunc()))));
+                .WhenAll(Enumerable.Repeat((object) null, repeat)
+                    .SelectMany(_ => Enumerable.Repeat(Guid.NewGuid().ToString("N"), repeat)
+                        .Select(guid => AddIntervalTaskWithLock(key: guid))));
 
             await act.Should().NotThrowAsync();
         }
