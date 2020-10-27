@@ -16,13 +16,13 @@ namespace Microsoft.Extensions.Caching
             TimeSpan? waitTime = null, TimeSpan? retryTime = null,
             CancellationToken cancellationToken = new CancellationToken())
         {
-            DisposeNotUsedSemaphores(resource);
+            CleanUnused(resource);
             SemaphoreWrapper semaphoreWrapper =
                 _semaphoreByCacheKeyDictionary.GetOrAdd(resource, _ => new SemaphoreWrapper());
             return await semaphoreWrapper.CreateLock(resource, waitTime);
         }
 
-        private void DisposeNotUsedSemaphores(string resource)
+        private void CleanUnused(string resource)
         {
             foreach (SemaphoreWrapper semaphoreWrapper in _semaphoreByCacheKeyDictionary
                 .Where(s => s.Key != resource && s.Value.CurrentCount == 1)

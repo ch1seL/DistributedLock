@@ -11,15 +11,15 @@ namespace ch1seL.DistributedLock.Tests.DistributedLockTests
     public class ThrowDistributedLockExceptionIfWaitTimeHasExpiredTests : LockTestsBase
     {
         [Theory]
-        [MemberData(nameof(LockServiceImplementationsTestsData.LockServiceTypes),
-            MemberType = typeof(LockServiceImplementationsTestsData))]
+        [MemberData(nameof(TestsData.LockServiceTypes),
+            MemberType = typeof(TestsData))]
         public async Task Test(Type lockServiceType)
         {
-            Init(LockServiceImplementationsTestsData.RegistrationByServiceType[lockServiceType]);
+            Init(TestsData.RegistrationByServiceType[lockServiceType]);
 
             Func<Task> act = () => Task.WhenAll(
                 Enumerable.Repeat((object) null, 10)
-                    .Select(_ => AddIntervalTaskWithLock(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(5))));
+                    .Select(_ => AddIntervalTaskWithLock(TimeSpan.FromMilliseconds(10), TimeSpan.FromSeconds(1))));
 
             var exception = await act.Should().ThrowExactlyAsync<DistributedLockException>();
             exception.Which.Status.Should().Be(DistributedLockBadStatus.Conflicted);

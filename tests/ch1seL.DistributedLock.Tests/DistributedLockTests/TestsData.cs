@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ch1seL.DistributedLock.Tests.DistributedLockTests
 {
-    public class LockServiceImplementationsTestsData
+    public class TestsData
     {
         public static IEnumerable<object[]> LockServiceTypes = new[]
         {

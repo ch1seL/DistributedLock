@@ -10,11 +10,11 @@ namespace ch1seL.DistributedLock.Tests.DistributedLockTests
     public class CreateAndAccessRandomKeysDontThrowExceptionsTests : LockTestsBase
     {
         [Theory]
-        [MemberData(nameof(LockServiceImplementationsTestsData.LockServiceTypes),
-            MemberType = typeof(LockServiceImplementationsTestsData))]
+        [MemberData(nameof(TestsData.LockServiceTypes),
+            MemberType = typeof(TestsData))]
         public async Task Test(Type lockService)
         {
-            Init(LockServiceImplementationsTestsData.RegistrationByServiceType[lockService]);
+            Init(TestsData.RegistrationByServiceType[lockService]);
             const int repeat = 100;
 
             Func<Task> act = async () => await Task

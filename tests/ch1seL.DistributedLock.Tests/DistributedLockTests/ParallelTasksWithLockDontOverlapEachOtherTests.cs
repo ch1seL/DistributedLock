@@ -12,11 +12,11 @@ namespace ch1seL.DistributedLock.Tests.DistributedLockTests
         private readonly Random _random = new Random();
 
         [Theory]
-        [MemberData(nameof(LockServiceImplementationsTestsData.LockServiceTypes),
-            MemberType = typeof(LockServiceImplementationsTestsData))]
+        [MemberData(nameof(TestsData.LockServiceTypes),
+            MemberType = typeof(TestsData))]
         public async Task Test(Type lockServiceType)
         {
-            Init(LockServiceImplementationsTestsData.RegistrationByServiceType[lockServiceType]);
+            Init(TestsData.RegistrationByServiceType[lockServiceType]);
             const int repeat = 100;
 
             await Task
