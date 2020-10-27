@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -19,17 +18,17 @@ jobs:
       with:
         dotnet-version: 3.1.x
 
-    - name: Install dependencies      
+    - name: Restore
       run: dotnet restore
 
     - name: Build
       run: dotnet build --configuration Release --no-restore
-      
-    - name: Install Redis Server
+
+    - name: Setup Redis Server
       uses: supercharge/redis-github-action@1.1.0
 
     - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test --configuration Release --no-restore --no-build --verbosity normal
 
     - name: Publish NuGet ch1seL.DistributedLock.Abstraction
       uses: brandedoutcast/publish-nuget@v2.5.5
