@@ -28,7 +28,7 @@ jobs:
       uses: supercharge/redis-github-action@1.1.0
 
     - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test --configuration Release --no-restore --no-build --verbosity normal
 
     - name: Publish NuGet ch1seL.DistributedLock.Abstraction
       uses: brandedoutcast/publish-nuget@v2.5.5

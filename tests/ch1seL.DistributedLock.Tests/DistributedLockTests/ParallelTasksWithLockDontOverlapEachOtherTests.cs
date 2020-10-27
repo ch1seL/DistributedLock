@@ -21,7 +21,7 @@ namespace ch1seL.DistributedLock.Tests.DistributedLockTests
 
             await Task
                 .WhenAll(Enumerable.Repeat((object) null, repeat)
-                    .Select(__ => AddIntervalTaskWithLock(workTime: TimeSpan.FromMilliseconds(_random.Next(10)))));
+                    .Select(__ => AddIntervalTaskWithLock(workTime: TimeSpan.FromMilliseconds(10))));
 
             var intersections = Intervals
                 .SelectMany(interval1 => Intervals.Where(interval1.NotEquals).Where(interval1.Intersect)

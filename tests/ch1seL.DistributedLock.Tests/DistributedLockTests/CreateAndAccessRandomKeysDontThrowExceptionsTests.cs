@@ -15,12 +15,12 @@ namespace ch1seL.DistributedLock.Tests.DistributedLockTests
         public async Task Test(Type lockService)
         {
             Init(TestsData.RegistrationByServiceType[lockService]);
-            const int repeat = 100;
+            const int repeat = 10;
 
             Func<Task> act = async () => await Task
                 .WhenAll(Enumerable.Repeat((object) null, repeat)
                     .SelectMany(_ => Enumerable.Repeat(Guid.NewGuid().ToString("N"), repeat)
-                        .Select(guid => AddIntervalTaskWithLock(key: guid))));
+                        .Select(guid => AddIntervalTaskWithLock(key: guid, workTime: TimeSpan.FromSeconds(1)))));
 
             await act.Should().NotThrowAsync();
         }
