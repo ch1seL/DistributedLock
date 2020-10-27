@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>        
+        <PackageVersion>0.0.5</PackageVersion>
+        <Authors>ch1seL</Authors>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageId>ch1seL.DistributedLock.Memory</PackageId>
+        <AssemblyName>ch1seL.DistributedLock.Memory</AssemblyName>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageProjectUrl>https://github.com/ch1seL/RedisLock</PackageProjectUrl>
+        <RootNamespace>ch1seL.DistributedLock.Memory</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\..\LICENSE" Pack="true" PackagePath="" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="ch1seL.DistributedLock.Abstraction" Version="0.0.4" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.0" />
+    </ItemGroup>
+
+</Project>

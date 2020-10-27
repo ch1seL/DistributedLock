@@ -3,9 +3,23 @@
   &lt;Assembly Path="C:\Users\ch1seL\.nuget\packages\microsoft.extensions.caching.abstractions\3.1.9\lib\netcoreapp3.1\Microsoft.Extensions.Caching.Abstractions.dll" /&gt;&#xD;
   &lt;Assembly Path="C:\Users\ch1seL\.nuget\packages\microsoft.extensions.caching.stackexchangeredis\3.1.9\lib\netstandard2.0\Microsoft.Extensions.Caching.StackExchangeRedis.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=1048f807_002D5042_002D49b7_002Daa41_002D891be120cbd5/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Test1" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;ProjectFile&gt;52CB0409-2F84-42A6-B35A-4CD4E63EDE81/f:RedisLockTests.cs&lt;/ProjectFile&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=1048f807_002D5042_002D49b7_002Daa41_002D891be120cbd5/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Test1" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Project Location="C:\Users\ch1seL\repos\ch1seL\RedisLock\tests\ch1seL.DistributedLock.Tests" Presentation="&amp;lt;tests&amp;gt;\&amp;lt;ch1seL.DistributedLock.Tests&amp;gt;" /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=92be7ca6_002Deee9_002D448b_002Db22c_002D2e401001ec14/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from &amp;lt;tests&amp;gt;\&amp;lt;ch1seL.DistributedLock.RedisLock.IntegrationTests&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Project Location="C:\Users\ch1seL\repos\ch1seL\RedisLock" Presentation="&amp;lt;tests&amp;gt;" /&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

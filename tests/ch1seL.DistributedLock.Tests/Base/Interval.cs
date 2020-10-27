@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace ch1seL.DistributedLock.RedisLock.IntegrationTests.RedisLock
+namespace ch1seL.DistributedLock.Tests.Base
 {
     [DebuggerDisplay("{nameof(Start)}: {Start}, {nameof(End)}: {End}")]
     public readonly struct Interval

@@ -5,20 +5,20 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ch1seL.DistributedLock.RedisLock.IntegrationTests.RedisLock
+namespace ch1seL.DistributedLock.Tests.Base
 {
-    public class RedisLockTestsBase : IDisposable
+    public abstract class LockTestsBase:IDisposable
     {
-        private readonly IDistributedLock _distributedLock;
+        private IDistributedLock _distributedLock;
         private readonly string _key = Guid.NewGuid().ToString("N");
-        private readonly ServiceProvider _serviceProvider;
+        private ServiceProvider _serviceProvider;
         private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
         protected readonly IList<Interval> Intervals = new List<Interval>();
 
-        protected RedisLockTestsBase()
+        protected void Init(Action<IServiceCollection> lockServiceRegistration)
         {
             IServiceCollection services = new ServiceCollection();
-            services.AddStackExchangeRedisLock(options => options.Configuration = "localhost");
+            lockServiceRegistration(services);
             _serviceProvider = services.BuildServiceProvider();
             _distributedLock = _serviceProvider.GetRequiredService<IDistributedLock>();
         }
