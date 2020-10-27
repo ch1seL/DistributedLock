@@ -31,16 +31,23 @@ jobs:
     - name: Test
       run: dotnet test --no-restore --verbosity normal
 
-    - name: Publish NuGet
+    - name: Publish NuGet ch1seL.DistributedLock.Abstraction
       uses: brandedoutcast/publish-nuget@v2.5.5
       with:
         PROJECT_FILE_PATH: src/ch1seL.DistributedLock.Abstraction/ch1seL.DistributedLock.Abstraction.csproj
         NUGET_KEY: ${{secrets.NUGET_API_KEY}}
         VERSION_REGEX: ^\s*<PackageVersion>(.*)<\/PackageVersion>\s*$
 
-    - name: Publish NuGet
+    - name: Publish NuGet ch1seL.DistributedLock.RedisLock
       uses: brandedoutcast/publish-nuget@v2.5.5
       with:
         PROJECT_FILE_PATH: src/ch1seL.DistributedLock.RedisLock/ch1seL.DistributedLock.RedisLock.csproj
+        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+        VERSION_REGEX: ^\s*<PackageVersion>(.*)<\/PackageVersion>\s*$
+
+    - name: Publish NuGet ch1seL.DistributedLock.MemoryLock
+      uses: brandedoutcast/publish-nuget@v2.5.5
+      with:
+        PROJECT_FILE_PATH: src/ch1seL.DistributedLock.MemoryLock/ch1seL.DistributedLock.MemoryLock.csproj
         NUGET_KEY: ${{secrets.NUGET_API_KEY}}
         VERSION_REGEX: ^\s*<PackageVersion>(.*)<\/PackageVersion>\s*$
