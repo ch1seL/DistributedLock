@@ -15,11 +15,11 @@ namespace Microsoft.Extensions.Caching.StackExchangeRedis
 {
     public class RedisLock : IDistributedLock, IDisposable
     {
-        private readonly ILoggerFactory _loggerFactory;
         private readonly SemaphoreSlim _connectionLock = new SemaphoreSlim(1, 1);
         private readonly TimeSpan _defaultExpiryTime = TimeSpan.FromSeconds(60);
         private readonly TimeSpan _defaultRetryTime = TimeSpan.FromMilliseconds(500);
         private readonly TimeSpan _defaultWaitTime = TimeSpan.FromSeconds(30);
+        private readonly ILoggerFactory _loggerFactory;
         private readonly RedisLockOptions _options;
         private IDistributedLockFactory _distributedLockFactory;
 
@@ -78,7 +78,8 @@ namespace Microsoft.Extensions.Caching.StackExchangeRedis
                 ConnectionMultiplexer connection = _options.ConfigurationOptions != null
                     ? await ConnectionMultiplexer.ConnectAsync(_options.ConfigurationOptions)
                     : await ConnectionMultiplexer.ConnectAsync(_options.Configuration);
-                _distributedLockFactory = RedLockFactory.Create(new List<RedLockMultiplexer> {connection}, _loggerFactory);
+                _distributedLockFactory =
+                    RedLockFactory.Create(new List<RedLockMultiplexer> {connection}, _loggerFactory);
             }
             finally
             {

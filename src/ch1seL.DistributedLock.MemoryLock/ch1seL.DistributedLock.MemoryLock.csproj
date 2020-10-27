@@ -2,14 +2,14 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>        
-        <PackageVersion>0.0.5</PackageVersion>
+        <PackageVersion>0.0.6</PackageVersion>
         <Authors>ch1seL</Authors>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageId>ch1seL.DistributedLock.MemoryLock</PackageId>
         <AssemblyName>ch1seL.DistributedLock.MemoryLock</AssemblyName>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageProjectUrl>https://github.com/ch1seL/RedisLock</PackageProjectUrl>
-        <RootNamespace>ch1seL.DistributedLock.Memory</RootNamespace>
+        <RootNamespace>Microsoft.Extensions.Caching</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
