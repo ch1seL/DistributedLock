@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ch1seL.DistributedLock.Memory;
+using Microsoft.Extensions.Caching;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,10 +8,20 @@ namespace ch1seL.DistributedLock.Tests.DistributedLockTests
 {
     public class LockServiceImplementationsTestsData
     {
-        public static IEnumerable<object[]> LockServiceRegistrations = new[]
+        public static IEnumerable<object[]> LockServiceTypes = new[]
         {
-            new object[] {nameof(MemoryLock), (Action<IServiceCollection>) (services => services.AddMemoryLock())},
-            new object[] {nameof(RedisLock), (Action<IServiceCollection>) (services => services.AddStackExchangeRedisLock(options => options.Configuration = "localhost"))}
+            new object[] {typeof(RedisLock)},
+            new object[] {typeof(MemoryLock)}
         };
+
+        public static readonly IReadOnlyDictionary<Type, Action<IServiceCollection>> RegistrationByServiceType =
+            new Dictionary<Type, Action<IServiceCollection>>
+            {
+                {typeof(MemoryLock), services => services.AddMemoryLock()},
+                {
+                    typeof(RedisLock),
+                    services => services.AddStackExchangeRedisLock(options => options.Configuration = "localhost")
+                }
+            };
     }
 }

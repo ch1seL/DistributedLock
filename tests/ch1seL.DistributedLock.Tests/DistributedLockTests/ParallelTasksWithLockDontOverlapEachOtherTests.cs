@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using ch1seL.DistributedLock.Tests.Base;
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace ch1seL.DistributedLock.Tests.DistributedLockTests
@@ -13,11 +12,11 @@ namespace ch1seL.DistributedLock.Tests.DistributedLockTests
         private readonly Random _random = new Random();
 
         [Theory]
-        [MemberData(nameof(LockServiceImplementationsTestsData.LockServiceRegistrations), MemberType = typeof(LockServiceImplementationsTestsData))]
-        public async Task Test(string lockService, Action<IServiceCollection> lockServiceRegistration)
+        [MemberData(nameof(LockServiceImplementationsTestsData.LockServiceTypes),
+            MemberType = typeof(LockServiceImplementationsTestsData))]
+        public async Task Test(Type lockServiceType)
         {
-            Init(lockServiceRegistration);
-
+            Init(LockServiceImplementationsTestsData.RegistrationByServiceType[lockServiceType]);
             const int repeat = 100;
 
             await Task

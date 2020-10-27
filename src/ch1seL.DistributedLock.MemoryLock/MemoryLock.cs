@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 
-namespace ch1seL.DistributedLock.Memory
+namespace Microsoft.Extensions.Caching
 {
     public class MemoryLock : IDistributedLock
     {
@@ -16,21 +16,22 @@ namespace ch1seL.DistributedLock.Memory
             TimeSpan? waitTime = null, TimeSpan? retryTime = null,
             CancellationToken cancellationToken = new CancellationToken())
         {
-            CleanEmpty(resource);
-            SemaphoreWrapper semaphore = _semaphoreByCacheKeyDictionary.GetOrAdd(resource, _ => new SemaphoreWrapper());
-            return await semaphore.CreateLock(resource, waitTime);
+            DisposeNotUsedSemaphores(resource);
+            SemaphoreWrapper semaphoreWrapper =
+                _semaphoreByCacheKeyDictionary.GetOrAdd(resource, _ => new SemaphoreWrapper());
+            return await semaphoreWrapper.CreateLock(resource, waitTime);
         }
 
-        private void CleanEmpty(string resource)
+        private void DisposeNotUsedSemaphores(string resource)
         {
-            foreach (var key in _semaphoreByCacheKeyDictionary
-                .Where(s => s.Key != resource)
-                .Where(s => s.Value.CurrentCount == 1)
-                .Select(s => s.Key))
-            {
-                _semaphoreByCacheKeyDictionary[key]?.Dispose();
-                _semaphoreByCacheKeyDictionary.TryRemove(key, out _);
-            }
+            foreach (SemaphoreWrapper semaphoreWrapper in _semaphoreByCacheKeyDictionary
+                .Where(s => s.Key != resource && s.Value.CurrentCount == 1)
+                .Select(s =>
+                    _semaphoreByCacheKeyDictionary.TryRemove(s.Key, out SemaphoreWrapper semaphoreToDispose)
+                        ? semaphoreToDispose
+                        : null)
+            )
+                semaphoreWrapper?.DisposeSemaphore();
         }
 
         private class SemaphoreWrapper : IDisposable
@@ -43,12 +44,14 @@ namespace ch1seL.DistributedLock.Memory
                 _semaphoreSlim.Release();
             }
 
+            public void DisposeSemaphore()
+            {
+                _semaphoreSlim?.Dispose();
+            }
+
             public async Task<IDisposable> CreateLock(string resource, TimeSpan? waitTime)
             {
-                if (await _semaphoreSlim.WaitAsync(waitTime ?? TimeSpan.FromMinutes(1)))
-                {
-                    return this;    
-                }
+                if (await _semaphoreSlim.WaitAsync(waitTime ?? TimeSpan.FromMinutes(1))) return this;
 
                 throw new DistributedLockException(resource, null, DistributedLockBadStatus.Conflicted);
             }

@@ -1,5 +1,4 @@
-﻿using ch1seL.DistributedLock.Memory;
-using Microsoft.Extensions.Caching;
+﻿using Microsoft.Extensions.Caching;
 using Microsoft.Extensions.Caching.Distributed;
 
 // ReSharper disable once CheckNamespace
