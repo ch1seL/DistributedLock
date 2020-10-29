@@ -9,7 +9,7 @@ using Xunit.Abstractions;
 
 namespace ch1seL.DistributedLock.Tests.MemoryLockTests
 {
-    public class MemoryLockMemoryLeakTests : LockIntervalTestsBase
+    public class MemoryLockMemoryLeakTests : IntervalsWithLockTestsBase
     {
         public MemoryLockMemoryLeakTests(ITestOutputHelper output)
         {

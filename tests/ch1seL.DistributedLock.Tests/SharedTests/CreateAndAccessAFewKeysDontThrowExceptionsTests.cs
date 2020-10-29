@@ -6,7 +6,7 @@ using Xunit;
 
 namespace ch1seL.DistributedLock.Tests.SharedTests
 {
-    public class CreateAndAccessAFewKeysDontThrowExceptionsTests : LockIntervalTestsBase
+    public class CreateAndAccessAFewKeysDontThrowExceptionsTests : IntervalsWithLockTestsBase
     {
         [Theory]
         [MemberData(nameof(TestsData.LockServiceTypes), MemberType = typeof(TestsData))]

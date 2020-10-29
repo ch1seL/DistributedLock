@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ch1seL.DistributedLock.Tests.Base
 {
-    public abstract class LockIntervalTestsBase : IDisposable
+    public abstract class IntervalsWithLockTestsBase : IDisposable
     {
         private readonly object _intervalsLock = new object();
         private readonly string _key = Guid.NewGuid().ToString("N");

@@ -7,7 +7,7 @@ using Xunit;
 
 namespace ch1seL.DistributedLock.Tests.SharedTests
 {
-    public class ThrowDistributedLockIntervalExceptionIfWaitTimeHasExpiredTests : LockIntervalTestsBase
+    public class ThrowDistributedLockIntervalExceptionIfWaitTimeHasExpiredTests : IntervalsWithLockTestsBase
     {
         [Theory]
         [MemberData(nameof(TestsData.LockServiceTypes), MemberType = typeof(TestsData))]

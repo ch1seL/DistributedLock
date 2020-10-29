@@ -7,7 +7,7 @@ using Xunit;
 
 namespace ch1seL.DistributedLock.Tests.SharedTests
 {
-    public class ParallelTasksWithLockIntervalDontOverlapEachOtherTests : LockIntervalTestsBase
+    public class ParallelTasksWithLockIntervalDontOverlapEachOtherTests : IntervalsWithLockTestsBase
     {
         [Theory]
         [MemberData(nameof(TestsData.LockServiceTypes), MemberType = typeof(TestsData))]
