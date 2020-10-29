@@ -4,7 +4,7 @@ using Microsoft.Extensions.Caching;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ch1seL.DistributedLock.Tests.DistributedLockTests
+namespace ch1seL.DistributedLock.Tests
 {
     public class TestsData
     {
@@ -17,7 +17,10 @@ namespace ch1seL.DistributedLock.Tests.DistributedLockTests
         public static readonly IReadOnlyDictionary<Type, Action<IServiceCollection>> RegistrationByServiceType =
             new Dictionary<Type, Action<IServiceCollection>>
             {
-                {typeof(MemoryLock), services => services.AddMemoryLock()},
+                {
+                    typeof(MemoryLock),
+                    services => services.AddMemoryLock()
+                },
                 {
                     typeof(RedisLock),
                     services => services.AddStackExchangeRedisLock(options => options.Configuration = "localhost")

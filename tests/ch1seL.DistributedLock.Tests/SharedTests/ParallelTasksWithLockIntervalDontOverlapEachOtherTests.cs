@@ -5,12 +5,10 @@ using ch1seL.DistributedLock.Tests.Base;
 using FluentAssertions;
 using Xunit;
 
-namespace ch1seL.DistributedLock.Tests.DistributedLockTests
+namespace ch1seL.DistributedLock.Tests.SharedTests
 {
-    public class ParallelTasksWithLockDontOverlapEachOtherTests : LockTestsBase
+    public class ParallelTasksWithLockIntervalDontOverlapEachOtherTests : LockIntervalTestsBase
     {
-        private readonly Random _random = new Random();
-
         [Theory]
         [MemberData(nameof(TestsData.LockServiceTypes),
             MemberType = typeof(TestsData))]
@@ -19,14 +17,13 @@ namespace ch1seL.DistributedLock.Tests.DistributedLockTests
             Init(TestsData.RegistrationByServiceType[lockServiceType]);
             const int repeat = 100;
 
-            await Task
-                .WhenAll(Enumerable.Repeat((object) null, repeat)
-                    .Select(__ => AddIntervalTaskWithLock(workTime: TimeSpan.FromMilliseconds(10))));
-
+            Parallel.For(0, repeat, _ => { AddSaveIntervalTaskToTaskList(); });
+            await Task.WhenAll(TaskList);
             var intersections = Intervals
                 .SelectMany(interval1 => Intervals.Where(interval1.NotEquals).Where(interval1.Intersect)
                     .Select(interval2 => new {interval1, interval2}));
 
+            TaskList.Count.Should().Be(repeat);
             Intervals.Should().HaveCount(repeat);
             intersections.Should().BeEmpty();
         }
