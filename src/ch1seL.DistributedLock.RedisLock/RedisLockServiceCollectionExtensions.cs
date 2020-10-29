@@ -19,8 +19,7 @@ namespace Microsoft.Extensions.DependencyInjection
         ///     <see cref="RedisLockOptions" />.
         /// </param>
         /// <returns>The <see cref="IServiceCollection" /> so that additional calls can be chained.</returns>
-        public static IServiceCollection AddStackExchangeRedisLock(this IServiceCollection services,
-            Action<RedisLockOptions> setupAction)
+        public static IServiceCollection AddStackExchangeRedisLock(this IServiceCollection services, Action<RedisLockOptions> setupAction)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 

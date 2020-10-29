@@ -4,8 +4,7 @@ namespace Microsoft.Extensions.Caching.Distributed
 {
     public class DistributedLockException : Exception
     {
-        public DistributedLockException(string resource, string lockId, DistributedLockBadStatus status) : base(
-            "Lock is not acquired")
+        public DistributedLockException(string resource, string lockId, DistributedLockBadStatus status) : base("Lock is not acquired")
         {
             Resource = resource;
             LockId = lockId;

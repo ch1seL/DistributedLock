@@ -32,8 +32,7 @@ namespace ch1seL.DistributedLock.Tests.Base
             _distributedLock = _serviceProvider.GetRequiredService<IDistributedLock>();
         }
 
-        protected void AddSaveIntervalTaskToTaskList(TimeSpan? waitTime = null, TimeSpan? workTime = null,
-            string key = null)
+        protected void AddSaveIntervalTaskToTaskList(TimeSpan? waitTime = null, TimeSpan? workTime = null, string key = null)
         {
             Task task = SaveInterval(waitTime, workTime, key);
 
@@ -45,8 +44,8 @@ namespace ch1seL.DistributedLock.Tests.Base
 
         private async Task SaveInterval(TimeSpan? waitTime = null, TimeSpan? workTime = null, string key = null)
         {
-            using IDisposable lockAsync = await _distributedLock.CreateLockAsync(key ?? _key, TimeSpan.FromMinutes(5),
-                waitTime ?? TimeSpan.FromMinutes(5), TimeSpan.FromMilliseconds(100));
+            using IDisposable lockAsync = await _distributedLock.CreateLockAsync(key ?? _key, TimeSpan.FromMinutes(5), waitTime ?? TimeSpan.FromMinutes(5),
+                TimeSpan.FromMilliseconds(100));
 
             var start = _stopwatch.ElapsedTicks;
             await Task.Delay(workTime ?? TimeSpan.Zero);

@@ -34,8 +34,7 @@ namespace ch1seL.DistributedLock.Tests.Base
 
         public bool Intersect(Interval interval)
         {
-            return Start >= interval.Start && Start <= interval.End
-                   || End >= interval.Start && End <= interval.End;
+            return Start >= interval.Start && Start <= interval.End || End >= interval.Start && End <= interval.End;
         }
     }
 }

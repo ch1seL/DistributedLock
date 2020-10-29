@@ -34,9 +34,7 @@ namespace Microsoft.Extensions.Caching.StackExchangeRedis
             _connectionLock?.Dispose();
         }
 
-        public async Task<IDisposable> CreateLockAsync(string resource, TimeSpan? expiryTime = null,
-            TimeSpan? waitTime = null,
-            TimeSpan? retryTime = null,
+        public async Task<IDisposable> CreateLockAsync(string resource, TimeSpan? expiryTime = null, TimeSpan? waitTime = null, TimeSpan? retryTime = null,
             CancellationToken cancellationToken = default)
         {
             await Connect();
@@ -44,9 +42,8 @@ namespace Microsoft.Extensions.Caching.StackExchangeRedis
             if (_options.InstanceName != null)
                 resource = string.Join('-', _options.InstanceName, resource);
 
-            IRedLock @lock = await _distributedLockFactory.CreateLockAsync(resource,
-                expiryTime ?? _defaultExpiryTime, waitTime ?? _defaultWaitTime, retryTime ?? _defaultRetryTime,
-                cancellationToken);
+            IRedLock @lock = await _distributedLockFactory.CreateLockAsync(resource, expiryTime ?? _defaultExpiryTime, waitTime ?? _defaultWaitTime,
+                retryTime ?? _defaultRetryTime, cancellationToken);
 
             if (@lock.IsAcquired) return @lock;
 
@@ -78,8 +75,7 @@ namespace Microsoft.Extensions.Caching.StackExchangeRedis
                 ConnectionMultiplexer connection = _options.ConfigurationOptions != null
                     ? await ConnectionMultiplexer.ConnectAsync(_options.ConfigurationOptions)
                     : await ConnectionMultiplexer.ConnectAsync(_options.Configuration);
-                _distributedLockFactory =
-                    RedLockFactory.Create(new List<RedLockMultiplexer> {connection}, _loggerFactory);
+                _distributedLockFactory = RedLockFactory.Create(new List<RedLockMultiplexer> {connection}, _loggerFactory);
             }
             finally
             {

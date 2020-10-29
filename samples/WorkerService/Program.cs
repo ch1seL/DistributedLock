@@ -15,16 +15,15 @@ namespace WorkerService
 
         private static IHostBuilder CreateHostBuilder(string[] args)
         {
-            return Host.CreateDefaultBuilder(args)
-                .ConfigureServices((hostContext, services) =>
-                {
-                    if (hostContext.HostingEnvironment.IsDevelopment())
-                        services.AddMemoryLock();
-                    else
-                        services.AddStackExchangeRedisLock(options => options.Configuration = "localhost");
+            return Host.CreateDefaultBuilder(args).ConfigureServices((hostContext, services) =>
+            {
+                if (hostContext.HostingEnvironment.IsDevelopment())
+                    services.AddMemoryLock();
+                else
+                    services.AddStackExchangeRedisLock(options => options.Configuration = "localhost");
 
-                    for (var i = 0; i < 5; i++) services.AddSingleton<IHostedService, Worker>();
-                });
+                for (var i = 0; i < 5; i++) services.AddSingleton<IHostedService, Worker>();
+            });
         }
     }
 }

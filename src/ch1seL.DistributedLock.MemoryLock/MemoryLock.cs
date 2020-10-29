@@ -10,8 +10,7 @@ namespace Microsoft.Extensions.Caching
     {
         private readonly object _lock = new object();
 
-        private readonly Dictionary<string, SemaphoreWrapper> _wrapperMap
-            = new Dictionary<string, SemaphoreWrapper>();
+        private readonly Dictionary<string, SemaphoreWrapper> _wrapperMap = new Dictionary<string, SemaphoreWrapper>();
 
         private bool _isDisposed;
 
@@ -32,10 +31,7 @@ namespace Microsoft.Extensions.Caching
             _isDisposed = true;
         }
 
-        public Task<IDisposable> CreateLockAsync(string resource,
-            TimeSpan? expiryTime = null,
-            TimeSpan? waitTime = null,
-            TimeSpan? retryTime = null,
+        public Task<IDisposable> CreateLockAsync(string resource, TimeSpan? expiryTime = null, TimeSpan? waitTime = null, TimeSpan? retryTime = null,
             CancellationToken cancellationToken = default)
         {
             lock (_lock)
