@@ -34,7 +34,7 @@ namespace ch1seL.DistributedLock.Tests.MemoryLockTests
                 });
             dotMemory.Check(memory =>
             {
-                ObjectSet semaphores = memory.GetObjects(where => where.Type.Is<SemaphoreWrapper>());
+                ObjectSet semaphores = memory.GetObjects(where => where.Type.Like(MemoryLock.SemaphoreWrapperTypeFullName));
                 semaphores.ObjectsCount.Should().Be(repeat);
             });
 
@@ -45,7 +45,7 @@ namespace ch1seL.DistributedLock.Tests.MemoryLockTests
             Intervals.Count.Should().Be(0);
             dotMemory.Check(memory =>
             {
-                ObjectSet semaphores = memory.GetObjects(where => where.Type.Is<SemaphoreWrapper>());
+                ObjectSet semaphores = memory.GetObjects(where => where.Type.Like(MemoryLock.SemaphoreWrapperTypeFullName));
                 semaphores.ObjectsCount.Should().Be(0);
             });
         }
