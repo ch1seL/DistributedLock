@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,9 +34,10 @@ namespace ch1seL.DistributedLock.Tests.Base
             _distributedLock = _serviceProvider.GetRequiredService<IDistributedLock>();
         }
 
-        protected void AddSaveIntervalTaskToTaskList(TimeSpan? waitTime = null, TimeSpan? workTime = null, string key = null)
+        protected void AddSaveIntervalTaskToTaskList(TimeSpan? waitTime = null, TimeSpan? workTime = null, string key = null,
+            CancellationToken cancellationToken = default)
         {
-            Task task = SaveInterval(waitTime, workTime, key);
+            Task task = SaveInterval(waitTime, workTime, key, cancellationToken);
 
             lock (_taskListLock)
             {
@@ -42,19 +45,29 @@ namespace ch1seL.DistributedLock.Tests.Base
             }
         }
 
-        private async Task SaveInterval(TimeSpan? waitTime = null, TimeSpan? workTime = null, string key = null)
+        private async Task SaveInterval(TimeSpan? waitTime = null, TimeSpan? workTime = null, string key = null, CancellationToken cancellationToken = default)
         {
             using IDisposable lockAsync = await _distributedLock.CreateLockAsync(key ?? _key, TimeSpan.FromMinutes(5), waitTime ?? TimeSpan.FromMinutes(5),
-                TimeSpan.FromMilliseconds(100));
+                TimeSpan.FromMilliseconds(100), cancellationToken);
 
             var start = _stopwatch.ElapsedTicks;
-            await Task.Delay(workTime ?? TimeSpan.Zero);
+            await Task.Delay(workTime ?? TimeSpan.Zero, cancellationToken);
             var end = _stopwatch.ElapsedTicks;
             var interval = new Interval(start, end);
 
             lock (_intervalsLock)
             {
                 Intervals.Add(interval);
+            }
+        }
+
+        protected (Interval, Interval)[] GetIntersections()
+        {
+            lock (_intervalsLock)
+            {
+                return Intervals.SelectMany(interval1 =>
+                        Intervals.Where(interval1.NotEquals).Where(interval1.Intersect).Select(interval2 => (interval1, interval2)))
+                    .ToArray();
             }
         }
     }

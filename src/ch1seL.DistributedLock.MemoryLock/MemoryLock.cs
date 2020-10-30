@@ -2,113 +2,119 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Distributed;
 
-namespace Microsoft.Extensions.Caching
+namespace Microsoft.Extensions.Caching.Distributed
 {
     public class MemoryLock : IDistributedLock, IDisposable
     {
-        private readonly object _lock = new object();
-
+        private readonly object _lockWrapperMap = new object();
         private readonly Dictionary<string, SemaphoreWrapper> _wrapperMap = new Dictionary<string, SemaphoreWrapper>();
-
-        private bool _isDisposed;
 
         public void Dispose()
         {
-            if (_isDisposed)
-                return;
-
-            lock (_lock)
+            lock (_lockWrapperMap)
             {
-                foreach (var key in _wrapperMap.Keys)
-                {
-                    _wrapperMap.Remove(key, out SemaphoreWrapper wrapper);
-                    wrapper.InternalDispose();
-                }
+                _wrapperMap.Clear();
             }
-
-            _isDisposed = true;
         }
 
-        public Task<IDisposable> CreateLockAsync(string resource, TimeSpan? expiryTime = null, TimeSpan? waitTime = null, TimeSpan? retryTime = null,
+        public async Task<IDisposable> CreateLockAsync(string resource, TimeSpan? expiryTime = null, TimeSpan? waitTime = null, TimeSpan? retryTime = null,
             CancellationToken cancellationToken = default)
         {
-            lock (_lock)
+            SemaphoreWrapper wrapper;
+            lock (_lockWrapperMap)
             {
                 if (!_wrapperMap.ContainsKey(resource))
-                    _wrapperMap.Add(resource, new SemaphoreWrapper(resource, w => Release(resource, w)));
-
-                return _wrapperMap[resource].WaitAsync(waitTime ?? TimeSpan.FromMinutes(1), cancellationToken);
+                {
+                    wrapper = new SemaphoreWrapper(resource, RemoveWrapper);
+                    _wrapperMap.Add(resource, wrapper);
+                }
+                else
+                {
+                    wrapper = _wrapperMap[resource];
+                }
             }
+
+            return await wrapper.WaitAsync(waitTime ?? TimeSpan.FromMinutes(1), cancellationToken);
         }
 
-        private void Release(string key, SemaphoreWrapper wrapper)
+        private void RemoveWrapper(string key)
         {
-            lock (_lock)
+            lock (_lockWrapperMap)
             {
-                var isEmpty = wrapper.Release();
-                if (!isEmpty)
-                    return;
                 _wrapperMap.Remove(key);
-                wrapper.InternalDispose();
+            }
+        }
+    }
+
+    public class SemaphoreWrapper : IDisposable
+    {
+        private readonly Action<string> _removeAction;
+        private readonly string _resource;
+        private readonly SemaphoreSlim _semaphoreSlim;
+        private readonly object _userCountLock = new object();
+        private int _useCount;
+
+        public SemaphoreWrapper(string resource, Action<string> removeAction)
+        {
+            _resource = resource;
+            _removeAction = removeAction;
+            _semaphoreSlim = new SemaphoreSlim(1, 1);
+        }
+
+        public void Dispose()
+        {
+            _semaphoreSlim.Release();
+            DecrementCount();
+            RemoveIfNotUsed();
+        }
+
+        public async Task<IDisposable> WaitAsync(TimeSpan waitTime, CancellationToken cancellationToken)
+        {
+            IncrementCount();
+            Exception innerException = null;
+
+            try
+            {
+                var waitResult = await _semaphoreSlim.WaitAsync(waitTime, cancellationToken);
+                if (waitResult) return this;
+            }
+            catch (Exception exception)
+            {
+                innerException = exception;
+            }
+
+            DecrementCount();
+            RemoveIfNotUsed();
+            throw new DistributedLockException(_resource, null, DistributedLockBadStatus.Conflicted, innerException);
+        }
+
+        private void IncrementCount()
+        {
+            lock (_userCountLock)
+            {
+                _useCount++;
             }
         }
 
-        public class SemaphoreWrapper : IDisposable
+        private void RemoveIfNotUsed()
         {
-            private readonly Action<SemaphoreWrapper> _parentRelease;
-            private readonly string _resource;
-            private readonly SemaphoreSlim _semaphoreSlim;
-            private readonly object _userCountLock = new object();
-            private int _useCount;
+            if (_useCount != 0) return;
+            _removeAction(_resource);
+            InternalDispose();
+        }
 
-            public SemaphoreWrapper(string resource, Action<SemaphoreWrapper> parentRelease)
+        private void DecrementCount()
+        {
+            lock (_userCountLock)
             {
-                _resource = resource;
-                _parentRelease = parentRelease;
-                _semaphoreSlim = new SemaphoreSlim(1, 1);
+                _useCount--;
             }
+        }
 
-            public void Dispose()
-            {
-                _parentRelease(this);
-            }
-
-            public async Task<IDisposable> WaitAsync(TimeSpan waitTime, CancellationToken cancellationToken)
-            {
-                lock (_userCountLock)
-                {
-                    _useCount++;
-                }
-
-                try
-                {
-                    var waitResult = await _semaphoreSlim.WaitAsync(waitTime, cancellationToken);
-                    if (waitResult) return this;
-                }
-                catch (ObjectDisposedException)
-                {
-                }
-
-                throw new DistributedLockException(_resource, null, DistributedLockBadStatus.Conflicted);
-            }
-
-            public bool Release()
-            {
-                _semaphoreSlim.Release();
-                lock (_userCountLock)
-                {
-                    _useCount--;
-                }
-
-                return _useCount == 0;
-            }
-
-            public void InternalDispose()
-            {
-                _semaphoreSlim.Dispose();
-            }
+        public void InternalDispose()
+        {
+            _semaphoreSlim.Dispose();
         }
     }
 }

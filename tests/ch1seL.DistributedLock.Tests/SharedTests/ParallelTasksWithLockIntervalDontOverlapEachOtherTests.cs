@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using ch1seL.DistributedLock.Tests.Base;
 using FluentAssertions;
@@ -16,14 +15,12 @@ namespace ch1seL.DistributedLock.Tests.SharedTests
             Init(TestsData.RegistrationByServiceType[lockServiceType]);
             const int repeat = 100;
 
-            Parallel.For(0, repeat, _ => { AddSaveIntervalTaskToTaskList(); });
+            Parallel.For(0, repeat, _ => { AddSaveIntervalTaskToTaskList(workTime: TimeSpan.FromMilliseconds(10)); });
             await Task.WhenAll(TaskList);
-            var intersections = Intervals.SelectMany(interval1 =>
-                Intervals.Where(interval1.NotEquals).Where(interval1.Intersect).Select(interval2 => new {interval1, interval2}));
 
             TaskList.Count.Should().Be(repeat);
             Intervals.Should().HaveCount(repeat);
-            intersections.Should().BeEmpty();
+            GetIntersections().Should().BeEmpty();
         }
     }
 }
