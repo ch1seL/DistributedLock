@@ -36,7 +36,7 @@ namespace Microsoft.Extensions.Caching.Distributed
                 }
             }
 
-            return await wrapper.WaitAsync(waitTime ?? TimeSpan.FromMinutes(1), cancellationToken);
+            return await wrapper.WaitAsync(waitTime ?? TimeSpan.FromSeconds(30), cancellationToken);
         }
 
         private void RemoveWrapper(string key)
