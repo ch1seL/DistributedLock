@@ -13,14 +13,15 @@ namespace ch1seL.DistributedLock.Tests.SharedTests
         public async Task Test(Type lockService)
         {
             Init(TestsData.RegistrationByServiceType[lockService]);
-            const int repeat = 10;
-            var guids = TestHelpers.GenerateGuidKeys(repeat);
+            const int repeat = 1000;
+            var guids = TestHelpers.GenerateGuidKeys(10);
 
-            Parallel.For(0, repeat, key => { Parallel.For(0, repeat, _ => { AddSaveIntervalTaskToTaskList(key: guids[key]); }); });
-            await Task.WhenAll(TaskList);
+            Parallel.For(0, repeat, i => { AddSaveIntervalTaskToTaskList(key: guids[i % guids.Length]); });
+            Func<Task> act = () => Task.WhenAll(TaskList);
 
-            TaskList.Count.Should().Be(repeat * repeat);
-            Intervals.Count.Should().Be(repeat * repeat);
+            await act.Should().NotThrowAsync();
+            TaskList.Count.Should().Be(repeat);
+            Intervals.Count.Should().Be(repeat);
         }
     }
 }
