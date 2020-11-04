@@ -47,7 +47,7 @@ namespace Microsoft.Extensions.Caching.Distributed
             lock (_semaphoreSlims)
             {
                 return _semaphoreSlims.AddOrUpdate(key,
-                    _ => new RefCounted<SemaphoreSlim>(new SemaphoreSlim(1)),
+                    _ => new RefCounted<SemaphoreSlim>(new SemaphoreSlim(1, 1)),
                     (_, value) =>
                     {
                         value.RefCount++;
