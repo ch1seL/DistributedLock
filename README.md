@@ -61,4 +61,4 @@ Host.CreateDefaultBuilder(args)
 ```
 # Sample
 
-https://github.com/ch1seL/RedisLock/tree/master/samples/WorkerService
+https://github.com/ch1seL/DistributedLock/tree/master/samples/WorkerService
