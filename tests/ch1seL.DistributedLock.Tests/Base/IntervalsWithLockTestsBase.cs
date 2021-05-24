@@ -11,10 +11,10 @@ namespace ch1seL.DistributedLock.Tests.Base
 {
     public abstract class IntervalsWithLockTestsBase : IDisposable
     {
-        private readonly object _intervalsLock = new object();
+        private readonly object _intervalsLock = new();
         private readonly string _key = Guid.NewGuid().ToString("N");
         private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
-        private readonly object _taskListLock = new object();
+        private readonly object _taskListLock = new();
 
         protected readonly IList<Interval> Intervals = new List<Interval>();
         protected readonly IList<Task> TaskList = new List<Task>();
@@ -37,7 +37,7 @@ namespace ch1seL.DistributedLock.Tests.Base
         protected void AddSaveIntervalTaskToTaskList(TimeSpan? waitTime = null, TimeSpan? workTime = null, string key = null,
             CancellationToken cancellationToken = default)
         {
-            Task task = SaveInterval(waitTime, workTime, key, cancellationToken);
+            var task = SaveInterval(waitTime, workTime, key, cancellationToken);
 
             lock (_taskListLock)
             {
@@ -47,7 +47,7 @@ namespace ch1seL.DistributedLock.Tests.Base
 
         private async Task SaveInterval(TimeSpan? waitTime = null, TimeSpan? workTime = null, string key = null, CancellationToken cancellationToken = default)
         {
-            using IDisposable lockAsync = await _distributedLock.CreateLockAsync(key ?? _key, TimeSpan.FromMinutes(5), waitTime ?? TimeSpan.FromMinutes(5),
+            using var lockAsync = await _distributedLock.CreateLockAsync(key ?? _key, TimeSpan.FromMinutes(5), waitTime ?? TimeSpan.FromMinutes(5),
                 TimeSpan.FromMilliseconds(100), cancellationToken);
 
             var start = _stopwatch.ElapsedTicks;
@@ -61,7 +61,7 @@ namespace ch1seL.DistributedLock.Tests.Base
             }
         }
 
-        protected (Interval, Interval)[] GetIntersections()
+        protected IEnumerable<(Interval, Interval)> GetIntersections()
         {
             lock (_intervalsLock)
             {

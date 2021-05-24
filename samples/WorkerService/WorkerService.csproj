@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk.Worker">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-        <UserSecretsId>dotnet-WorkerService-56DC58EC-8910-4947-A202-60D027333D3A</UserSecretsId>
+        <TargetFramework>net5.0</TargetFramework>
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.9" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     </ItemGroup>
 
     <ItemGroup>

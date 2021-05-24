@@ -10,8 +10,7 @@ namespace Microsoft.Extensions.Caching.Distributed
     {
         public static readonly string SemaphoreReleaserTypeFullName = typeof(SemaphoreReleaser).FullName;
 
-        private readonly ConcurrentDictionary<string, RefCounted<SemaphoreSlim>> _semaphoreSlims =
-            new ConcurrentDictionary<string, RefCounted<SemaphoreSlim>>();
+        private readonly ConcurrentDictionary<string, RefCounted<SemaphoreSlim>> _semaphoreSlims = new();
 
         public void Dispose()
         {
@@ -23,9 +22,8 @@ namespace Microsoft.Extensions.Caching.Distributed
             }
         }
 
-        public async Task<IDisposable> CreateLockAsync(string resource, TimeSpan? expiryTime = null,
-            TimeSpan? waitTime = null,
-            TimeSpan? retryTime = null, CancellationToken cancellationToken = new CancellationToken())
+        public async Task<IDisposable> CreateLockAsync(string resource, TimeSpan? expiryTime = null, TimeSpan? waitTime = null, TimeSpan? retryTime = null,
+            CancellationToken cancellationToken = default)
         {
             Exception innerException = null;
             try
