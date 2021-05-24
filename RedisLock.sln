@@ -1,6 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AA3FA77D-B187-41A1-95A9-8BC93CCF79D8}"
+ProjectSection(SolutionItems) = preProject
+	src\Directory.Packages.props = src\Directory.Packages.props
+EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ch1seL.DistributedLock.Abstraction", "src\ch1seL.DistributedLock.Abstraction\ch1seL.DistributedLock.Abstraction.csproj", "{503205F0-5FC4-4077-B1BF-C31FE5F73AF4}"
 EndProject

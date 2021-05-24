@@ -1,22 +1,39 @@
-name: Build and Test
+name: Main workflow
 
 on:
+  pull_request:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  release:
+    types: [ published ]
+
+env:
+  DOTNET_SDK_VERSION: 5.0.x
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  GITHUB_FEED: https://nuget.pkg.github.com/ch1seL/
+  GITHUB_USER: ch1seL
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  NUGET_FEED: https://api.nuget.org/v3/index.json
+  NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
 
 jobs:
   build:
+    name: Build and test
+    if: github.event_name != 'release'    
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
 
-    - name: Setup .NET Core
+    - name: Setup dotnet SDK 3.1
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.x
+        
+    - name: Setup dotnet SDK ${{ env.DOTNET_SDK_VERSION }}
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.DOTNET_SDK_VERSION }}
 
     - name: Restore
       run: dotnet restore
@@ -24,29 +41,47 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore
 
-    - name: Setup Redis Server
-      uses: supercharge/redis-github-action@1.1.0
+    - name: Run redis
+      run: |
+        docker run -d -p 6379:6379 redis
+        wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+        chmod +x wait-for-it.sh
+        ./wait-for-it.sh -s -t 120 localhost:6379       
 
     - name: Test
       run: dotnet test --configuration Release --no-restore --no-build --verbosity normal
-
-    - name: Publish NuGet ch1seL.DistributedLock.Abstraction
-      uses: brandedoutcast/publish-nuget@v2.5.5
-      with:
-        PROJECT_FILE_PATH: src/ch1seL.DistributedLock.Abstraction/ch1seL.DistributedLock.Abstraction.csproj
-        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
-        VERSION_REGEX: ^\s*<PackageVersion>(.*)<\/PackageVersion>\s*$
-
-    - name: Publish NuGet ch1seL.DistributedLock.RedisLock
-      uses: brandedoutcast/publish-nuget@v2.5.5
-      with:
-        PROJECT_FILE_PATH: src/ch1seL.DistributedLock.RedisLock/ch1seL.DistributedLock.RedisLock.csproj
-        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
-        VERSION_REGEX: ^\s*<PackageVersion>(.*)<\/PackageVersion>\s*$
-
-    - name: Publish NuGet ch1seL.DistributedLock.MemoryLock
-      uses: brandedoutcast/publish-nuget@v2.5.5
-      with:
-        PROJECT_FILE_PATH: src/ch1seL.DistributedLock.MemoryLock/ch1seL.DistributedLock.MemoryLock.csproj
-        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
-        VERSION_REGEX: ^\s*<PackageVersion>(.*)<\/PackageVersion>\s*$
+      
+  publish:
+    name: Publish NuGet
+    needs: build
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_SDK_VERSION }}
+      - name: Create Release NuGet package
+        run: |
+          arrTag=(${GITHUB_REF//\// })
+          VERSION="${arrTag[2]}"
+          echo Version: $VERSION
+          VERSION="${VERSION//v}"
+          echo Clean Version: $VERSION
+          dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion=$VERSION -o nupkg       
+      - name: Push to GitHub Feed
+        working-directory: nupkg
+        run: |
+          for f in *.nupkg
+          do
+            curl -vX PUT -u "$GITHUB_USER:$GITHUB_TOKEN" -F package=@$f $GITHUB_FEED
+          done           
+      - name: Push to NuGet Feed
+        working-directory: nupkg
+        run: |
+          for f in *.nupkg
+          do
+            echo $f
+            dotnet nuget push $f --source $NUGET_FEED --skip-duplicate --api-key $NUGET_KEY            
+          done

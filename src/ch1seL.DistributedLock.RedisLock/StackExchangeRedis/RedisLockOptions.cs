@@ -1,6 +1,7 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 
@@ -9,6 +10,7 @@ namespace Microsoft.Extensions.Caching.StackExchangeRedis
     /// <summary>
     ///     Configuration options for <see cref="Microsoft.Extensions.Caching.StackExchangeRedis.RedisLock" />.
     /// </summary>
+    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
     public class RedisLockOptions : IOptions<RedisLockOptions>
     {
         /// <summary>

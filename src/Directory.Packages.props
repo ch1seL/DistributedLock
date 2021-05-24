@@ -1,0 +1,20 @@
+<Project>
+
+    <PropertyGroup>
+        <Authors>Alexander Salamatov</Authors>
+        <PackageProjectUrl>https://github.com/ch1seL/RedisLock</PackageProjectUrl>
+
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/ch1seL/RedisLock</RepositoryUrl>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
+
+</Project>

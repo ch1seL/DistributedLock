@@ -4,7 +4,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace WorkerService
 {
-    public class Program
+    public static class Program
     {
         public static readonly Guid AppId = Guid.NewGuid();
 

@@ -12,7 +12,7 @@ namespace WorkerService
         private readonly IDistributedLock _distributedLock;
         private readonly Guid _instanceId = Guid.NewGuid();
         private readonly ILogger<Worker> _logger;
-        private readonly Random _random = new Random();
+        private readonly Random _random = new();
 
         public Worker(ILogger<Worker> logger, IDistributedLock distributedLock)
         {
@@ -27,9 +27,9 @@ namespace WorkerService
                 using (await _distributedLock.CreateLockAsync("test-lock", waitTime: TimeSpan.FromMinutes(5), retryTime: TimeSpan.FromMilliseconds(10),
                     cancellationToken: stoppingToken))
                 {
-                    _logger.LogInformation("App:{appId} | Instance: {instanceId} | Worker running at: {time}", Program.AppId, _instanceId, DateTimeOffset.Now);
+                    _logger.LogInformation("App:{AppId} | Instance: {InstanceId} | Worker running at: {Time}", Program.AppId, _instanceId, DateTimeOffset.Now);
                     await Task.Delay(TimeSpan.FromSeconds(3), stoppingToken);
-                    _logger.LogInformation("App:{appId} | Instance: {instanceId} | Worker finished at: {time}", Program.AppId, _instanceId, DateTimeOffset.Now);
+                    _logger.LogInformation("App:{AppId} | Instance: {InstanceId} | Worker finished at: {Time}", Program.AppId, _instanceId, DateTimeOffset.Now);
                 }
 
                 // RedLock uses retries and will use mostly only one instance of the worker
