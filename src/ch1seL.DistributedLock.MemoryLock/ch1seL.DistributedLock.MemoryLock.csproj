@@ -6,8 +6,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="ch1seL.DistributedLock.Abstraction" Version="0.1.2" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ch1seL.DistributedLock.Abstraction\ch1seL.DistributedLock.Abstraction.csproj" />
     </ItemGroup>
 
 </Project>

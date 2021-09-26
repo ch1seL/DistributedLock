@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <Authors>Alexander Salamatov</Authors>
-        <PackageProjectUrl>https://github.com/ch1seL/RedisLock</PackageProjectUrl>
+        <PackageProjectUrl>https://github.com/ch1seL/DistributedLock</PackageProjectUrl>
 
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -10,7 +10,7 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
         <RepositoryType>git</RepositoryType>
-        <RepositoryUrl>https://github.com/ch1seL/RedisLock</RepositoryUrl>
+        <RepositoryUrl>https://github.com/ch1seL/DistributedLock</RepositoryUrl>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
 
         <EmbedUntrackedSources>true</EmbedUntrackedSources>

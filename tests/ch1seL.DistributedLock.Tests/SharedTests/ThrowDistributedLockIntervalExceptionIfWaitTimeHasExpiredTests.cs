@@ -20,7 +20,7 @@ namespace ch1seL.DistributedLock.Tests.SharedTests
             Func<Task> act = () => Task.WhenAll(TaskList);
 
             var exception = await act.Should().ThrowExactlyAsync<DistributedLockException>();
-            exception.Which.Status.Should().Be(DistributedLockBadStatus.Conflicted);
+            exception.Which.Data["Status"].Should().Be(DistributedLockBadStatus.Conflicted);
             Intervals.Should().HaveCount(1);
         }
     }

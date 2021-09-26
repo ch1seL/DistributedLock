@@ -1,4 +1,4 @@
-﻿namespace Microsoft.Extensions.Caching.Distributed
+namespace Microsoft.Extensions.Caching.Distributed
 {
     /// <summary>
     ///     reused RedLockNet.RedLockStatus enum
