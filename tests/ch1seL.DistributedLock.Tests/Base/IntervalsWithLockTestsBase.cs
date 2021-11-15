@@ -11,10 +11,10 @@ namespace ch1seL.DistributedLock.Tests.Base
 {
     public abstract class IntervalsWithLockTestsBase : IDisposable
     {
-        private readonly object _intervalsLock = new();
+        private readonly object _intervalsLock = new object();
         private readonly string _key = Guid.NewGuid().ToString("N");
         private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
-        private readonly object _taskListLock = new();
+        private readonly object _taskListLock = new object();
 
         protected readonly IList<Interval> Intervals = new List<Interval>();
         protected readonly IList<Task> TaskList = new List<Task>();
