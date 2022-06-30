@@ -1,6 +1,10 @@
 <Project>
 
     <PropertyGroup>
+        <TargetFrameworks>netstandard2.1;netcoreapp3.1;net5;net6</TargetFrameworks>
+    </PropertyGroup>
+    
+    <PropertyGroup>
         <Authors>Alexander Salamatov</Authors>
         <PackageProjectUrl>https://github.com/ch1seL/DistributedLock</PackageProjectUrl>
 
