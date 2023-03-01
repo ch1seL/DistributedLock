@@ -13,10 +13,6 @@ on:
 
 env:
   DOTNET_NOLOGO: true
-  GITHUB_FEED: https://nuget.pkg.github.com/ch1seL/
-  GITHUB_USER: ch1seL
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  NUGET_FEED: https://api.nuget.org/v3/index.json
   NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
 
 jobs:
@@ -68,21 +64,9 @@ jobs:
           echo Version: $VERSION
           VERSION="${VERSION//v}"
           echo Clean Version: $VERSION
-          dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion=$VERSION -p:Version=$VERSION -o nupkg       
+          dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion=$VERSION -p:Version=$VERSION       
       
-      - name: Push to GitHub Feed
-        working-directory: nupkg
+      - name: Push to GitHub and Nuget feeds
         run: |
-          for f in *.nupkg
-          do
-            curl -vX PUT -u "$GITHUB_USER:$GITHUB_TOKEN" -F package=@$f $GITHUB_FEED
-          done           
-      
-      - name: Push to NuGet Feed
-        working-directory: nupkg
-        run: |
-          for f in *.nupkg
-          do
-            echo $f
-            dotnet nuget push $f --source $NUGET_FEED --skip-duplicate --api-key $NUGET_KEY            
-          done
+          dotnet nuget push "src/**/bin/Release/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key $NUGET_KEY --skip-duplicate
+          dotnet nuget push "src/**/bin/Release/*.nupkg" --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --api-key ${{ github.token }} --skip-duplicate
