@@ -1,5 +1,9 @@
 name: Main workflow
 
+concurrency:
+  group: ${{ github.ref }}-ci
+  cancel-in-progress: true
+
 on:
   pull_request:
   push:
