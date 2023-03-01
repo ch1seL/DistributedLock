@@ -8,9 +8,7 @@ on:
     types: [ published ]
 
 env:
-  DOTNET_SDK_VERSION: 6.0.x
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_NOLOGO: true
   GITHUB_FEED: https://nuget.pkg.github.com/ch1seL/
   GITHUB_USER: ch1seL
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -25,20 +23,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Setup dotnet SDK 3.1
-      uses: actions/setup-dotnet@v1
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 3.1.x
-
-    - name: Setup dotnet SDK 5.0
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 5.0.x
-        
-    - name: Setup dotnet SDK ${{ env.DOTNET_SDK_VERSION }}
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: ${{ env.DOTNET_SDK_VERSION }}
+        dotnet-version: |
+          3.x
+          6.x
+          7.x
 
     - name: Restore
       run: dotnet restore
@@ -62,10 +53,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: ${{ env.DOTNET_SDK_VERSION }}
+      
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
+        
       - name: Create Release NuGet package
         run: |
           arrTag=(${GITHUB_REF//\// })
@@ -74,6 +65,7 @@ jobs:
           VERSION="${VERSION//v}"
           echo Clean Version: $VERSION
           dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion=$VERSION -p:Version=$VERSION -o nupkg       
+      
       - name: Push to GitHub Feed
         working-directory: nupkg
         run: |
@@ -81,6 +73,7 @@ jobs:
           do
             curl -vX PUT -u "$GITHUB_USER:$GITHUB_TOKEN" -F package=@$f $GITHUB_FEED
           done           
+      
       - name: Push to NuGet Feed
         working-directory: nupkg
         run: |
