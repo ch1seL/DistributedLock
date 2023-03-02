@@ -14,8 +14,10 @@ namespace ch1seL.DistributedLock.Tests.MemoryLockTests;
 [Collection("InMemory collection")]
 public class MemoryLeakTests : IntervalsWithLockTestsBase {
     private readonly InMemoryFixture _fixture;
+    private readonly ITestOutputHelper _output;
 
     public MemoryLeakTests(ITestOutputHelper output, InMemoryFixture fixture) {
+        _output = output;
         _fixture = fixture;
         DotMemoryUnitTestOutput.SetOutputMethod(output.WriteLine);
     }
@@ -23,7 +25,7 @@ public class MemoryLeakTests : IntervalsWithLockTestsBase {
     [Fact]
     [DotMemoryUnit(FailIfRunWithoutSupport = false)]
     public async Task Test() {
-        Init(_fixture.Registration);
+        Init(collection => _fixture.Registration(collection, _output));
 
         const int repeat = 10;
         var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));

@@ -4,19 +4,22 @@ using ch1seL.DistributedLock.Tests.Base;
 using ch1seL.DistributedLock.Tests.Fixtures;
 using FluentAssertions;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace ch1seL.DistributedLock.Tests.SharedTests;
 
 public abstract class CreateAndAccessAFewKeysDontThrowExceptionsTests : IntervalsWithLockTestsBase {
     private readonly ITestFixture _fixture;
+    private readonly ITestOutputHelper _output;
 
-    protected CreateAndAccessAFewKeysDontThrowExceptionsTests(ITestFixture fixture) {
+    protected CreateAndAccessAFewKeysDontThrowExceptionsTests(ITestFixture fixture, ITestOutputHelper output) {
         _fixture = fixture;
+        _output = output;
     }
 
     [Fact]
     public async Task Test() {
-        Init(_fixture.Registration);
+        Init(collection => _fixture.Registration(collection, _output));
         const int repeat = 1000;
         var guids = TestHelpers.GenerateGuidKeys(10);
 
@@ -30,11 +33,11 @@ public abstract class CreateAndAccessAFewKeysDontThrowExceptionsTests : Interval
 
     [Collection("Redis collection")]
     public class Redis : CreateAndAccessAFewKeysDontThrowExceptionsTests {
-        public Redis(RedisFixture fixture) : base(fixture) { }
+        public Redis(RedisFixture fixture, ITestOutputHelper output) : base(fixture, output) { }
     }
 
     [Collection("InMemory collection")]
     public class InMemory : CreateAndAccessAFewKeysDontThrowExceptionsTests {
-        public InMemory(InMemoryFixture fixture) : base(fixture) { }
+        public InMemory(InMemoryFixture fixture, ITestOutputHelper output) : base(fixture, output) { }
     }
 }

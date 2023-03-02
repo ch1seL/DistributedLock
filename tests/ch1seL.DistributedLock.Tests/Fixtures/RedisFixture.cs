@@ -2,7 +2,12 @@ using System.Threading.Tasks;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Extensions.Logging;
+using StackExchange.Redis;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace ch1seL.DistributedLock.Tests.Fixtures;
 
@@ -20,9 +25,17 @@ public class RedisFixture : ITestFixture, IAsyncLifetime {
         await _redisContainer.StopAsync();
     }
 
-    public IServiceCollection Registration(IServiceCollection services) {
-        return services.AddStackExchangeRedisLock(options =>
-            options.Configuration = $"localhost:{_redisContainer.GetMappedPublicPort(6379)}");
+    public IServiceCollection Registration(IServiceCollection services, ITestOutputHelper output) {
+        services.AddLogging(builder => builder.AddProvider(new SerilogLoggerProvider(new LoggerConfiguration()
+            .MinimumLevel.Verbose().WriteTo.TestOutput(output).CreateLogger())));
+
+        var configuration = $"localhost:{_redisContainer.GetMappedPublicPort(6379)}";
+        services.AddStackExchangeRedisLock(options => options.Configuration = configuration);
+        services.AddSingleton(_ => ConnectionMultiplexer.Connect(configuration));
+        services.AddTransient(provider =>
+            provider.GetRequiredService<ConnectionMultiplexer>().GetServer(configuration));
+        services.AddTransient(provider => provider.GetRequiredService<ConnectionMultiplexer>().GetDatabase());
+        return services;
     }
 }
 

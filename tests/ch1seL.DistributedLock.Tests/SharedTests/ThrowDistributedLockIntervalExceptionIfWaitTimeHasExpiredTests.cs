@@ -5,19 +5,24 @@ using ch1seL.DistributedLock.Tests.Fixtures;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Distributed;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace ch1seL.DistributedLock.Tests.SharedTests;
 
 public abstract class ThrowDistributedLockIntervalExceptionIfWaitTimeHasExpiredTests : IntervalsWithLockTestsBase {
     private readonly ITestFixture _fixture;
+    private readonly ITestOutputHelper _output;
 
-    protected ThrowDistributedLockIntervalExceptionIfWaitTimeHasExpiredTests(ITestFixture fixture) {
+    protected ThrowDistributedLockIntervalExceptionIfWaitTimeHasExpiredTests(ITestFixture fixture,
+        ITestOutputHelper output) {
         _fixture = fixture;
+        _output = output;
     }
 
     [Fact]
     public async Task Test() {
-        Init(_fixture.Registration);
+        Init(collection => _fixture.Registration(collection, _output));
+
 
         const int repeat = 10;
 
@@ -32,11 +37,11 @@ public abstract class ThrowDistributedLockIntervalExceptionIfWaitTimeHasExpiredT
 
     [Collection("Redis collection")]
     public class Redis : ThrowDistributedLockIntervalExceptionIfWaitTimeHasExpiredTests {
-        public Redis(RedisFixture fixture) : base(fixture) { }
+        public Redis(RedisFixture fixture, ITestOutputHelper output) : base(fixture, output) { }
     }
 
     [Collection("InMemory collection")]
     public class InMemory : ThrowDistributedLockIntervalExceptionIfWaitTimeHasExpiredTests {
-        public InMemory(InMemoryFixture fixture) : base(fixture) { }
+        public InMemory(InMemoryFixture fixture, ITestOutputHelper output) : base(fixture, output) { }
     }
 }
