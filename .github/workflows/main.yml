@@ -37,13 +37,6 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore
 
-    - name: Run redis
-      run: |
-        docker run -d -p 6379:6379 redis
-        wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
-        chmod +x wait-for-it.sh
-        ./wait-for-it.sh -s -t 120 localhost:6379       
-
     - name: Test
       run: dotnet test --configuration Release --no-restore --no-build --verbosity normal
       

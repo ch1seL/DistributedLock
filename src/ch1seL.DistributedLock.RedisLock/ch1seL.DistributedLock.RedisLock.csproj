@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <RootNamespace>Microsoft.Extensions.Caching</RootNamespace>
-    </PropertyGroup>
+	<PropertyGroup>
+		<RootNamespace>Microsoft.Extensions.Caching</RootNamespace>
+	</PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="RedLock.net" Version="2.3.2" />
-    </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="RedLock.net" Version="2.3.2" />
+	</ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\ch1seL.DistributedLock.Abstraction\ch1seL.DistributedLock.Abstraction.csproj" />
-    </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ch1seL.DistributedLock.Abstraction\ch1seL.DistributedLock.Abstraction.csproj" />
+	</ItemGroup>
 
 </Project>

@@ -5,36 +5,32 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace WorkerService
-{
-    public class Worker : BackgroundService
-    {
-        private readonly IDistributedLock _distributedLock;
-        private readonly Guid _instanceId = Guid.NewGuid();
-        private readonly ILogger<Worker> _logger;
-        private readonly Random _random = new();
+namespace WorkerService; 
 
-        public Worker(ILogger<Worker> logger, IDistributedLock distributedLock)
-        {
-            _logger = logger;
-            _distributedLock = distributedLock;
-        }
+public class Worker : BackgroundService {
+    private readonly IDistributedLock _distributedLock;
+    private readonly Guid _instanceId = Guid.NewGuid();
+    private readonly ILogger<Worker> _logger;
+    private readonly Random _random = new();
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                using (await _distributedLock.CreateLockAsync("test-lock", waitTime: TimeSpan.FromMinutes(5), retryTime: TimeSpan.FromMilliseconds(10),
-                    cancellationToken: stoppingToken))
-                {
-                    _logger.LogInformation("App:{AppId} | Instance: {InstanceId} | Worker running at: {Time}", Program.AppId, _instanceId, DateTimeOffset.Now);
-                    await Task.Delay(TimeSpan.FromSeconds(3), stoppingToken);
-                    _logger.LogInformation("App:{AppId} | Instance: {InstanceId} | Worker finished at: {Time}", Program.AppId, _instanceId, DateTimeOffset.Now);
-                }
+    public Worker(ILogger<Worker> logger, IDistributedLock distributedLock) {
+        _logger = logger;
+        _distributedLock = distributedLock;
+    }
 
-                // RedLock uses retries and will use mostly only one instance of the worker
-                await Task.Delay(_random.Next(100, 200), stoppingToken);
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
+        while (!stoppingToken.IsCancellationRequested) {
+            using (await _distributedLock.CreateLockAsync("test-lock", waitTime: TimeSpan.FromMinutes(5),
+                       retryTime: TimeSpan.FromMilliseconds(10), cancellationToken: stoppingToken)) {
+                _logger.LogInformation("App:{AppId} | Instance: {InstanceId} | Worker running at: {Time}",
+                    Program.AppId, _instanceId, DateTimeOffset.Now);
+                await Task.Delay(TimeSpan.FromSeconds(3), stoppingToken);
+                _logger.LogInformation("App:{AppId} | Instance: {InstanceId} | Worker finished at: {Time}",
+                    Program.AppId, _instanceId, DateTimeOffset.Now);
             }
+
+            // RedLock uses retries and will use mostly only one instance of the worker
+            await Task.Delay(_random.Next(100, 200), stoppingToken);
         }
     }
 }

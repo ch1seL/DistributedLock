@@ -1,24 +1,24 @@
 <Project>
 
-    <PropertyGroup>
-        <TargetFrameworks>netstandard2.1;netcoreapp3.1;net6;net7</TargetFrameworks>
-    </PropertyGroup>
-    
-    <PropertyGroup>
-        <Authors>Alexander Salamatov</Authors>
-        <PackageProjectUrl>https://github.com/ch1seL/DistributedLock</PackageProjectUrl>
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.1;netcoreapp3.1;net6;net7</TargetFrameworks>
+	</PropertyGroup>
 
-        <IncludeSymbols>true</IncludeSymbols>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	<PropertyGroup>
+		<Authors>Alexander Salamatov</Authors>
+		<PackageProjectUrl>https://github.com/ch1seL/DistributedLock</PackageProjectUrl>
 
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
-        <RepositoryType>git</RepositoryType>
-        <RepositoryUrl>https://github.com/ch1seL/DistributedLock</RepositoryUrl>
-        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 
-        <EmbedUntrackedSources>true</EmbedUntrackedSources>
-        <LangVersion>latest</LangVersion>
-    </PropertyGroup>
+		<RepositoryType>git</RepositoryType>
+		<RepositoryUrl>https://github.com/ch1seL/DistributedLock</RepositoryUrl>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
 
 </Project>
