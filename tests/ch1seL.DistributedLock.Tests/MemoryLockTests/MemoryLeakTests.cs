@@ -5,6 +5,7 @@ using ch1seL.DistributedLock.Tests.Base;
 using ch1seL.DistributedLock.Tests.Fixtures;
 using FluentAssertions;
 using JetBrains.dotMemoryUnit;
+using JetBrains.dotMemoryUnit.Kernel;
 using Microsoft.Extensions.Caching.Distributed;
 using Xunit;
 using Xunit.Abstractions;
@@ -23,7 +24,6 @@ public class MemoryLeakTests : IntervalsWithLockTestsBase {
     }
 
     [Fact]
-    [DotMemoryUnit(FailIfRunWithoutSupport = false)]
     public async Task Test() {
         Init(collection => _fixture.Registration(collection, _output));
 
@@ -39,10 +39,11 @@ public class MemoryLeakTests : IntervalsWithLockTestsBase {
                             cancellationToken: cts.Token);
                     });
             });
-        dotMemory.Check(memory => {
-            var semaphores = memory.GetObjects(where => where.Type.Like(MemoryLock.SemaphoreReleaserTypeFullName));
-            semaphores.ObjectsCount.Should().Be(repeat);
-        });
+        if (dotMemoryApi.IsEnabled)
+            dotMemory.Check(memory => {
+                var semaphores = memory.GetObjects(where => where.Type.Like(MemoryLock.SemaphoreReleaserTypeFullName));
+                semaphores.ObjectsCount.Should().Be(repeat);
+            });
 
         await cts.CancelAsync();
 
@@ -50,9 +51,10 @@ public class MemoryLeakTests : IntervalsWithLockTestsBase {
 
         await act.Should().ThrowAsync<DistributedLockException>();
         Intervals.Count.Should().Be(0);
-        dotMemory.Check(memory => {
-            var semaphores = memory.GetObjects(where => where.Type.Like(MemoryLock.SemaphoreReleaserTypeFullName));
-            semaphores.ObjectsCount.Should().Be(0);
-        });
+        if (dotMemoryApi.IsEnabled)
+            dotMemory.Check(memory => {
+                var semaphores = memory.GetObjects(where => where.Type.Like(MemoryLock.SemaphoreReleaserTypeFullName));
+                semaphores.ObjectsCount.Should().Be(0);
+            });
     }
 }
