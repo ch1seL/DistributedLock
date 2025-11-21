@@ -44,7 +44,7 @@ public class MemoryLeakTests : IntervalsWithLockTestsBase {
             semaphores.ObjectsCount.Should().Be(repeat);
         });
 
-        cts.Cancel();
+        await cts.CancelAsync();
 
         var act = () => Task.WhenAll(TaskList);
 
