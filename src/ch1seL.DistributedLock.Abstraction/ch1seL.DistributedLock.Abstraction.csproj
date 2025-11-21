@@ -1,6 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-
 	<PropertyGroup>
 		<RootNamespace>Microsoft.Extensions.Caching.Distributed</RootNamespace>
 	</PropertyGroup>
